@@ -39,9 +39,11 @@ public class MemberService {
 
 				break;
 			case 2 :
+				updateMember();
 				displayMsg(" 회원 정보 수정 ");
 				break;
 			case 3 :
+				deleteMember();
 				displayMsg(" 회원 정보 삭제 ");
 				break;
 			case 4 :
@@ -62,13 +64,13 @@ public class MemberService {
 			}
 
 			if (count == 1) {
-			break;
-			//if(choice == 6);
-			//break;
+				break;
+				//if(choice == 6);
+				//break;
+			}
 		}
 	}
-}
-	
+
 	public int printMenu() {
 
 		displayMsg(" ===== 회원 관리 프로그램 ===== ");
@@ -84,19 +86,18 @@ public class MemberService {
 
 		return choice;
 	}
-
+	// 1.회원정보 등록
 	public void insertMenber() {
-		
-//		private String memberId;	// 회원 아이디
-//		private String memberPw;	// 회원 비밀번호
-//		private String memberName;	// 회원 이름
-//		private String email;		// 이메일
-//		private String phone;		// 연락처
-		
-		
-		
+
+		//		private String memberId;	// 회원 아이디
+		//		private String memberPw;	// 회원 비밀번호
+		//		private String memberName;	// 회원 이름
+		//		private String email;		// 이메일
+		//		private String phone;		// 연락처
+
+
 		Member member = new Member();
-		
+
 		System.out.println(" 회원 아이디 입력해주세요 ");
 		String memberId = sc.next();
 		System.out.println(" 회원 비밀번호 입력해주세요 ");
@@ -107,58 +108,124 @@ public class MemberService {
 		String email = sc.next();
 		System.out.println(" 연락처 입력해주세요 ");
 		String phone = sc.next();
-		
+
 		// mamber 에 회원정보 셋팅
 		member.setMemberId(memberId);
 		member.setMemberPw(memberPw);
 		member.setMemberName(memberName);
 		member.setEmail(email);
 		member.setPhone(phone);
-		
+
 		//셋팅된 member를 List<member>
-		
+
 		mDAO.insertMember(member);
-		
+
 	}
-	//4. 회원정보출력(id)
-	public void printMember() {
-		
+
+	// 2. 회원정보수정
+	public void updateMember() {
+
 		List<Member> members = mDAO.findMember();
-		
-		System.out.print(" 조회할 회원 아이디를 입력하세요 : ");
+
+		System.out.println("수정할 아이디를 입력하세요 : ");
 		String findId = sc.next();
-		
+
 		boolean flag = false;
-		
+
 		for(int i=0; i<members.size(); i++) {
 			Member member = members.get(i);
-			
+
+			if(findId.equals(member.getMemberId())) {
+				System.out.println(member.getMemberName() + " 님의 정보를 수정해주세요");
+
+				System.out.println("비빌번호 : ");
+				member.setMemberPw(sc.next());
+
+				System.out.println("이메일 : ");
+				member.setEmail(sc.next());
+
+				System.out.println("전호번호 : ");
+				member.setPhone(sc.next());
+
+				flag = true;
+				break;
+			}
+		}
+
+		if(flag == false) {
+			displayMsg(" 회원 아이디가 좋재하지 않습니다");
+		}
+
+	}
+
+	//3. 회원정보 삭제
+	public void deleteMember() {
+
+		List<Member> members = mDAO.findMember();
+
+		System.out.println("삭제할 아이디를 입력하세요 : ");
+		String findId = sc.next();
+
+		boolean flag = false;
+
+		for(int i=0; i<members.size(); i++ ) {
+			Member member = members.get(i);
+
+			if(findId.equals(member.getMemberId())) {
+
+				// members.remove(member);
+				// displayMsg(member.getMemberId()+"회원 정보를 삭제합니다");
+				mDAO.deleteMember(member);
+				displayMsg("삭제 완료");
+
+				flag = true;
+				break;
+			}
+
+		}
+		if(flag == false) {
+			displayMsg(" 회원 정보가 좋재하지 않습니다");
+		}
+	}
+
+	//4. 회원정보출력(id 검색으로 출력)
+	public void printMember() {
+
+		List<Member> members = mDAO.findMember();
+
+		System.out.print(" 조회할 회원 아이디를 입력하세요 : ");
+		String findId = sc.next();
+
+		boolean flag = false;
+
+		for(int i=0; i<members.size(); i++) {
+			Member member = members.get(i);
+
 			if(findId.equals(member.getMemberId())) {
 				displayMsg(" 회원 아이디 : " + members.get(i).getMemberId());
 				displayMsg(" 회원 비빌번호 : " + members.get(i).getMemberPw());
 				displayMsg(" 회원 이름 : " + members.get(i).getMemberName());
 				displayMsg(" 이메일 : " + members.get(i).getEmail());
 				displayMsg(" 회원 연락처 : " + members.get(i).getPhone());
-				
+
 				flag = true;
-				break;
-				
+				break;		
 			}
 		}
 		if(flag == false) {
 			displayMsg(" 회원 아이디가 좋재하지 않습니다");
 		}
 	}
-	
-	
+
+
 	//5. 회원 전체 정보출력
 	public void printAllMembers() {
-		
+
 		List<Member> members = mDAO.findAllMember();
-		
+
 		for(int i=0; i<members.size(); i++) {
 			Member member = members.get(i);
-			
+
 			displayMsg(" 회원 아이디 : " + members.get(i).getMemberId());
 			displayMsg(" 회원 비빌번호 : " + members.get(i).getMemberPw());
 			displayMsg(" 회원 이름 : " + members.get(i).getMemberName());
@@ -167,7 +234,7 @@ public class MemberService {
 			displayMsg( " --------------------------- ");
 		}
 	}
-	
+
 	// 메세지 출력용
 	public void displayMsg(String msg) {
 		System.out.println(msg);

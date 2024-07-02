@@ -20,7 +20,7 @@ public class MemberDAO {
 		members = new ArrayList<Member>();
 	}
 
-	//저장
+	//입력
 	public void insertMember(Member member) {
 		members.add(member);
 
